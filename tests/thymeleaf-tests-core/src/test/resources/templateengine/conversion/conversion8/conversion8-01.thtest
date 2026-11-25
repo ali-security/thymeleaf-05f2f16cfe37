@@ -1,0 +1,7 @@
+%TEMPLATE_MODE HTML
+# ------------------------------------------------------------
+%INPUT
+<p th:text="${#conversions.convert('/tmp/thymeleaf-conversion8', 'java.io.File')}">NOT ALLOWED</p>
+# ------------------------------------------------------------
+%EXCEPTION org.thymeleaf.exceptions.TemplateProcessingException
+%EXCEPTION_MESSAGE_PATTERN (.*)\Qcannot be used as a target for type conversion operations (#conversions): access to this type is forbidden in expressions\E(.*)

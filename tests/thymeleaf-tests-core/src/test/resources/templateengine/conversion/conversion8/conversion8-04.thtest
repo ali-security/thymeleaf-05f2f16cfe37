@@ -1,0 +1,10 @@
+%TEMPLATE_MODE HTML
+# ------------------------------------------------------------
+%CONTEXT
+fileArrayType = @java.lang.Class@forName('[[Ljava.io.File;')
+# ------------------------------------------------------------
+%INPUT
+<p th:text="${#conversions.convert('/tmp/thymeleaf-conversion8', fileArrayType)}">NOT ALLOWED</p>
+# ------------------------------------------------------------
+%EXCEPTION org.thymeleaf.exceptions.TemplateProcessingException
+%EXCEPTION_MESSAGE_PATTERN (.*)\Qcannot be used as a target for type conversion operations (#conversions): access to this type is forbidden in expressions\E(.*)

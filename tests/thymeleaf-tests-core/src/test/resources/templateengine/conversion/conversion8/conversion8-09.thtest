@@ -1,0 +1,8 @@
+%TEMPLATE_MODE HTML
+# ------------------------------------------------------------
+%INPUT
+<p th:text="${#conversions.convert('payload', 'org.thymeleaf.templateengine.conversion.conversion8.ConversionGadget8')}">ALLOWED</p>
+<p th:utext="${#conversions.convert('payload', 'org.thymeleaf.templateengine.conversion.conversion8.ConversionGadget8')}">NOT ALLOWED</p>
+# ------------------------------------------------------------
+%EXCEPTION org.thymeleaf.exceptions.TemplateProcessingException
+%EXCEPTION_MESSAGE_PATTERN (.*)\Qcannot be used as a target for type conversion operations (#conversions) in a restricted expression execution context\E(.*)

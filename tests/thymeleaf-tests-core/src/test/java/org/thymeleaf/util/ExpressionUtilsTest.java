@@ -156,6 +156,76 @@ public final class ExpressionUtilsTest {
         Assertions.assertTrue(!isTypeForbidden("java.math.BigDecimal"));
         Assertions.assertTrue(!isTypeForbidden("java.sql.Timestamp"));
         Assertions.assertTrue(!isTypeForbidden("java.util.Optional"));
+        Assertions.assertTrue(!isTypeForbidden("java.time.LocalDate"));
+    }
+
+    @Test
+    public void arrayTypeAllowedTest() {
+        // Array types are forbidden if their component type is (at any array dimension)
+        Assertions.assertFalse(!isTypeForbidden("[Ljava.lang.Runtime;"));
+        Assertions.assertFalse(!isTypeForbidden("[[Ljava.io.File;"));
+        Assertions.assertFalse(!isTypeForbidden("java.lang.Runtime[]"));
+        Assertions.assertFalse(!isTypeForbidden("java.io.File[][]"));
+        Assertions.assertFalse(!isTypeForbidden("[Lorg.springframework.context.support.ClassPathXmlApplicationContext;"));
+        Assertions.assertFalse(!isTypeForbidden("[Ljavax.script.ScriptEngineManager;"));
+        Assertions.assertTrue(!isTypeForbidden("[Ljava.lang.String;"));
+        Assertions.assertTrue(!isTypeForbidden("[[Ljava.lang.Integer;"));
+        Assertions.assertTrue(!isTypeForbidden("java.lang.Integer[]"));
+        Assertions.assertTrue(!isTypeForbidden("[Lorg.thymeleaf.X;"));
+        Assertions.assertTrue(!isTypeForbidden("[I"));
+        Assertions.assertTrue(!isTypeForbidden("[[J"));
+    }
+
+    @Test
+    public void componentTypeNameTest() {
+        Assertions.assertEquals("java.lang.String", componentTypeName("java.lang.String"));
+        Assertions.assertEquals("java.lang.String", componentTypeName("[Ljava.lang.String;"));
+        Assertions.assertEquals("java.lang.String", componentTypeName("[[Ljava.lang.String;"));
+        Assertions.assertEquals("java.lang.String", componentTypeName("java.lang.String[]"));
+        Assertions.assertEquals("java.lang.String", componentTypeName("java.lang.String[][]"));
+        Assertions.assertEquals("I", componentTypeName("[I"));
+        Assertions.assertEquals("J", componentTypeName("[[J"));
+        Assertions.assertEquals("", componentTypeName(""));
+    }
+
+    @Test
+    public void shortTypeNameTest() {
+        // Type names shorter than a java package prefix must not raise any exceptions
+        Assertions.assertFalse(isJavaPackage("j"));
+        Assertions.assertFalse(isJavaPackage("java"));
+        Assertions.assertTrue(isJavaPackage("java.X"));
+        Assertions.assertTrue(!isTypeForbidden("j"));
+        Assertions.assertTrue(!isTypeForbidden("java"));
+    }
+
+    @Test
+    public void typeAllowedForRestrictedInstantiationTest() {
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.lang.String"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.lang.Integer"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.lang.Boolean"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.math.BigDecimal"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.util.Date"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.util.List"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.sql.Timestamp"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.time.LocalDate"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.time.LocalDateTime"));
+        Assertions.assertTrue(isTypeAllowedForRestrictedInstantiation("java.time.ZoneId"));
+        // Only the allowlisted types, matched by fully qualified name
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("String"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.lang.Runtime"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.lang.Thread"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.lang.ProcessBuilder"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.io.File"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.net.URL"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.util.GregorianCalendar"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.time.format.DateTimeFormatter"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("org.thymeleaf.X"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("com.whatever.X"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("org.springframework.context.support.ClassPathXmlApplicationContext"));
+        // Arrays are not allowed, not even of allowed types
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("[Ljava.lang.String;"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("java.lang.String[]"));
+        Assertions.assertFalse(isTypeAllowedForRestrictedInstantiation("[Lorg.thymeleaf.X;"));
     }
 
     @Test

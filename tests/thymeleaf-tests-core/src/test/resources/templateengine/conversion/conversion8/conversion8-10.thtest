@@ -1,0 +1,13 @@
+%TEMPLATE_MODE HTML
+# ------------------------------------------------------------
+%INPUT
+<p th:utext="${#conversions.convert('42', 'Integer')}">...</p>
+<p th:utext="${#conversions.convert('42', 'java.lang.Long')}">...</p>
+<p th:utext="${#conversions.convert('12.50', 'java.math.BigDecimal')}">...</p>
+<p th:utext="${#conversions.convert(42, 'String')}">...</p>
+# ------------------------------------------------------------
+%OUTPUT
+<p>42</p>
+<p>42</p>
+<p>12.50</p>
+<p>42</p>
